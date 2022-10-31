@@ -1,0 +1,53 @@
+server:
+  port: 8001
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+
+mybatis:
+  mapper-locations: classpath*:mappers/*.xml
+
+spring:
+  application:
+    # 服务逻辑名称
+    name: light-reading-cloud-book
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/reading_resource?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: 668768
+    initial-size: 5
+    min-idle: 5
+    max-active: 30
+    max-wait: 6000
+    test-while-idle: true
+    validation-query: 'select 1 from dual'
+    connect-timeout: 1500
+  cloud:
+    sentinel:
+      transport:
+        #配置Sentinel dashboard地址
+        dashboard: localhost:8080
+        #默认8719端口，假如被占用会自动从8719开始依次+1扫描,直至找到未被占用的端口
+        port: 8719
+
+  #---- redis配置  ----#
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    password:
+
+feign:
+  okhttp:
+    enabled: true
+  sentinel:
+    enabled: true
+  compression:
+    request:
+      enabled: true
+      mime-type: text/html,application/xml,application/json
+      min-request-size: 1024
+    response:
+      enabled: true
+from: dev-environment-1.0...

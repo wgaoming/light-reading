@@ -1,0 +1,21 @@
+spring:
+  # 服务逻辑名称
+  application:
+    name: light-reading-cloud-book
+
+  cloud:
+    nacos:
+      # 配置中心
+      config:
+#        server-addr: 192.168.215.128:8848
+        server-addr: 127.0.0.1:8848
+        file-extension: yml
+        refresh: true
+        shared-dataids: light-reading-cloud-book.yml
+#        namespace: 3eec113a-4900-4805-bfb1-e431c99a78c3
+        namespace: 0b9f779c-2b61-4916-8796-c74cc55de45e
+
+      # 注册中心
+      discovery:
+        server-addr: ${spring.cloud.nacos.config.server-addr}
+        namespace: ${spring.cloud.nacos.config.namespace}
