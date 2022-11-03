@@ -14,6 +14,8 @@ import cn.zealon.readingcloud.homepage.vo.IndexBooklistVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
@@ -41,7 +43,7 @@ public class IndexBooklistServiceImpl implements IndexBooklistService {
      * @return
      */
     @Override
-    public IndexBooklistVO getIndexBooklistVO(Integer booklistId, Integer clientRandomNumber) {
+    public IndexBooklistVO getIndexBooklistVO(Integer booklistId, Integer clientRandomNumber){
         IndexBooklist booklist = this.getIndexBooklistById(booklistId);
         // 是否随机获取
         boolean randomFlag = booklist.getMoreType() == BooklistMoreTypeEnum.EXCHANGE.getValue() ? true : false;

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 /**
  * 书单图书接口
  * @author: zealon
@@ -28,7 +30,7 @@ public class IndexBooklistItemController {
     })
     @ApiResponses({@ApiResponse(code = 200, message = "", response = BookVO.class)})
     @GetMapping("index/getBooklistPagingBooks")
-    public Result getBooklistPagingBooks(Integer booklistId, Integer page, Integer limit) {
+    public Result getBooklistPagingBooks(Integer booklistId, Integer page, Integer limit){
         return this.indexBooklistItemService.getBooklistPagingBooks(booklistId, page, limit);
     }
 

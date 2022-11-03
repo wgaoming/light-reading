@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
 
+
 /**
  * ES 三方客户端配置
  * @author: zealon

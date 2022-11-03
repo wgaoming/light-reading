@@ -59,7 +59,6 @@ public class SearchServiceImpl implements SearchService {
         // 多字段匹配
         Map multiMatch = new HashMap();
         multiMatch.put("query", keyword);
-        multiMatch.put("type", "most_fields");
         String[] fields = new String[]{"bookName^2","bookName.pinyin","author"};
         multiMatch.put("fields", fields);
         query.put("multi_match",multiMatch);
@@ -68,6 +67,7 @@ public class SearchServiceImpl implements SearchService {
         int size = from + limit;
         RequestQuery requestQuery = new RequestQuery(from, size, query);
         SearchBookResult searchBookResult = this.getSearchResult(requestQuery.toString());
+
         return ResultUtil.success(searchBookResult);
     }
 

@@ -25,6 +25,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -60,7 +62,7 @@ public class IndexBooklistItemServiceImpl implements IndexBooklistItemService {
      * @return
      */
     @Override
-    public Result getBooklistPagingBooks(Integer booklistId, Integer page, Integer limit) {
+    public Result getBooklistPagingBooks(Integer booklistId, Integer page, Integer limit){
         String key = RedisHomepageKey.getBooklistItemPagingKey(booklistId);
         // 使用页码+数量作为Hash的key，防止不同数量的分页页码冲突
         String field = page.toString() + limit;
@@ -144,7 +146,7 @@ public class IndexBooklistItemServiceImpl implements IndexBooklistItemService {
     }
 
     @Override
-    public List<BooklistBookVO> getBooklistOrderBooks(Integer booklistId, String bookIds, Integer showNumber, Boolean showLikeCount) {
+    public List<BooklistBookVO> getBooklistOrderBooks(Integer booklistId, String bookIds, Integer showNumber, Boolean showLikeCount){
         String[] bookIdArray = bookIds.split(",");
         return this.getBooklistBookVOByBookIdArray(bookIdArray, showNumber, showLikeCount);
     }

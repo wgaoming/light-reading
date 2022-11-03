@@ -37,8 +37,11 @@ public class BookServiceImpl implements BookService {
             book = this.bookMapper.selectByBookId(bookId);
             if (null != book) {
                 this.redisService.setExpireCache(key, book, RedisExpire.HOUR);
+            }else{
+
             }
         }
+
         return ResultUtil.success(book);
     }
 

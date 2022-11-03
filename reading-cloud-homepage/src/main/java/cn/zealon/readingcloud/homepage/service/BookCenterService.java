@@ -2,6 +2,8 @@ package cn.zealon.readingcloud.homepage.service;
 
 import cn.zealon.readingcloud.common.pojo.book.Book;
 
+import java.io.IOException;
+
 /**
  * 图书中心服务
  * @author: zealon

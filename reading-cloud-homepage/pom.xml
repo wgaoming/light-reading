@@ -83,14 +83,21 @@
             <artifactId>jest</artifactId>
             <version>6.3.1</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-high-level-client</artifactId>
+            <version>6.4.3</version>
+        </dependency>
         <!-- 内部包 -->
         <dependency>
             <groupId>cn.zealon</groupId>
             <artifactId>reading-cloud-common</artifactId>
             <version>1.0.1</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
         <!-- 图书中心feign客户端 -->
         <dependency>
             <groupId>cn.zealon</groupId>
