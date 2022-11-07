@@ -8,7 +8,6 @@
         <version>1.0.0</version>
     </parent>
 
-    <groupId>cn.zealon</groupId>
     <artifactId>reading-cloud-book</artifactId>
     <version>1.0.0</version>
     <name>reading-cloud-book</name>
@@ -27,16 +26,14 @@
 
         <!-- 配置中心 -->
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
+            <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-            <version>0.9.0.RELEASE</version>
         </dependency>
 
         <!-- 注册中心 -->
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
+            <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-            <version>0.9.0.RELEASE</version>
         </dependency>
 
         <!-- 感应服务端变化 -->

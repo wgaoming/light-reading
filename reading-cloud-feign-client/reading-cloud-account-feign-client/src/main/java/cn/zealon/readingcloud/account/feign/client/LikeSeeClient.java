@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author: zealon
  * @since: 2019/7/4
  */
-@FeignClient(contextId = "like", name = "light-reading-cloud-account", fallbackFactory = LikeSeeClientFallBack.class)
+@FeignClient(url = "http://localhost:8003/", name = "light-reading-cloud-account", fallbackFactory = LikeSeeClientFallBack.class)
 public interface LikeSeeClient {
 
     @GetMapping("/account/like-see/get-count")

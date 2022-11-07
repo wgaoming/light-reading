@@ -1,5 +1,6 @@
 package cn.zealon.readingcloud.homepage.service;
 
+import cn.zealon.readingcloud.common.pojo.book.Book;
 import cn.zealon.readingcloud.common.result.Result;
 
 /**
@@ -24,4 +25,12 @@ public interface SearchService {
      * @return
      */
     Result getSearchResultBooks(String keyword, Integer from, Integer size);
+
+    void create();
+
+    boolean Exists();
+
+    void delete();
+
+    void add(Book book, String id);
 }

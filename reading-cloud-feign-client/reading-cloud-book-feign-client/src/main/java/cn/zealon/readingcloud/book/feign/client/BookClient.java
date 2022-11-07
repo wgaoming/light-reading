@@ -13,10 +13,13 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author: zealon
  * @since: 2019/7/4
  */
-@FeignClient(contextId = "book", name = "light-reading-cloud-book", fallbackFactory = BookClientFallBack.class)
+@FeignClient(url = "http://localhost:8001/", name = "light-reading-cloud-book", fallbackFactory = BookClientFallBack.class)
 public interface BookClient {
 
     @RequestMapping("/book/getBookById")
     Result<Book> getBookById(@RequestParam("bookId") String bookId);
+
+    @RequestMapping("/book/test")
+    int test();
 
 }

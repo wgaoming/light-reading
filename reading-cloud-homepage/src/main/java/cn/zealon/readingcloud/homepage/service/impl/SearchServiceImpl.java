@@ -1,15 +1,28 @@
 package cn.zealon.readingcloud.homepage.service.impl;
 
+import cn.zealon.readingcloud.common.pojo.book.Book;
 import cn.zealon.readingcloud.common.result.Result;
 import cn.zealon.readingcloud.common.result.ResultUtil;
 import cn.zealon.readingcloud.homepage.dao.HotSearchWordMapper;
-import cn.zealon.readingcloud.homepage.domain.RequestQuery;
 import cn.zealon.readingcloud.homepage.domain.SearchBookItem;
 import cn.zealon.readingcloud.homepage.domain.SearchBookResult;
 import cn.zealon.readingcloud.homepage.service.SearchService;
-import io.searchbox.client.JestClient;
-import io.searchbox.core.Search;
-import io.searchbox.core.SearchResult;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
+import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.xcontent.XContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +30,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +45,7 @@ public class SearchServiceImpl implements SearchService {
 
     /** ES Jest 客户端对象 */
     @Autowired
-    private JestClient jestClient;
+    private RestHighLevelClient client;
 
     /** 索引别名 */
     @Value("${es.aliasName}")
@@ -54,19 +66,13 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public Result getSearchResultBooks(String keyword, Integer page, Integer limit){
-        // 查询条件
-        Map query = new HashMap();
-        // 多字段匹配
-        Map multiMatch = new HashMap();
-        multiMatch.put("query", keyword);
-        String[] fields = new String[]{"bookName^2","bookName.pinyin","author"};
-        multiMatch.put("fields", fields);
-        query.put("multi_match",multiMatch);
-
+        SearchSourceBuilder builder=new SearchSourceBuilder();
         int from = (page - 1) * limit;
         int size = from + limit;
-        RequestQuery requestQuery = new RequestQuery(from, size, query);
-        SearchBookResult searchBookResult = this.getSearchResult(requestQuery.toString());
+        builder.from(from);
+        builder.size(size);
+        builder.query(QueryBuilders.fuzzyQuery("bookName",keyword));
+        SearchBookResult searchBookResult = this.getSearchResult(builder);
 
         return ResultUtil.success(searchBookResult);
     }
@@ -76,34 +82,74 @@ public class SearchServiceImpl implements SearchService {
      * @param query
      * @return
      */
-    private SearchBookResult getSearchResult(String query){
+    private SearchBookResult getSearchResult(SearchSourceBuilder query){
         SearchBookResult result = new SearchBookResult();
-        // 封装查询对象
-        Search search = new Search.Builder(query)
-                .addIndex(aliasName)
-                .addType(indexType).build();
-
+        SearchRequest request=new SearchRequest().indices("index");
+        request.source(query);
         // 执行查询
         try {
-            SearchResult searchResult = this.jestClient.execute(search);
-            List<SearchBookItem> bookList;
-            if (searchResult.isSucceeded()) {
-                // 查询成功，处理结果项
-                List<SearchResult.Hit<SearchBookItem, Void>> hitList = searchResult.getHits(SearchBookItem.class);
-                bookList = new ArrayList<>(hitList.size());
-                for (SearchResult.Hit<SearchBookItem, Void> hit : hitList) {
-                    bookList.add(hit.source);
-                }
-            } else {
-                bookList = new ArrayList<>();
-            }
+            SearchResponse response=client.search(request, RequestOptions.DEFAULT);
 
+            List<SearchBookItem> bookList=new ArrayList<>();
+            // 查询成功，处理结果项
+            SearchHits hits=response.getHits();
+            for(SearchHit hit : hits) {
+                Map<String,Object> map=hit.getSourceAsMap();
+                int a=1;
+//                bookList.add(hit.source);
+            }
             // 赋值
-            result.setTotal(searchResult.getTotal());
+//            result.setTotal(searchResult.getTotal());
             result.setBookList(bookList);
         } catch (IOException e) {
             LOGGER.error("查询图书异常，查询语句:{}", query, e);
         }
         return result;
+    }
+    //创建索引库
+    public void create() {
+        try {
+            //指定请求路径，参数是索引库名称
+            CreateIndexRequest request = new CreateIndexRequest("index");
+            //发起请求，indices返回包含索引库操作的所有方法,第二个参数是请求配置
+            CreateIndexResponse createIndex = client.indices().create(request, RequestOptions.DEFAULT);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    //判断ES库内是否已经存在索引
+    public boolean Exists(){
+        boolean exists=false;
+        try {
+            // 1.创建Request对象
+            GetIndexRequest request = new GetIndexRequest("index");
+            // 2.发送请求
+            exists = client.indices().exists(request, RequestOptions.DEFAULT);
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return exists;
+    }
+    public void delete(){
+        try {
+            DeleteIndexRequest request = new DeleteIndexRequest("index");
+            client.indices().delete(request, RequestOptions.DEFAULT);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+    public void add(Book book, String id){
+        try {
+            IndexRequest request = new IndexRequest("index").id(id);
+            ObjectMapper mapper = new ObjectMapper();
+            String userJson = mapper.writeValueAsString(book);
+            request.source(userJson, XContentType.JSON);
+            IndexResponse response = client.index(request, RequestOptions.DEFAULT);
+            LOGGER.info(response.toString());
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }

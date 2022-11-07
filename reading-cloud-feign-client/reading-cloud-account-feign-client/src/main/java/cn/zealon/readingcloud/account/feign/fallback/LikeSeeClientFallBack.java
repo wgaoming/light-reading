@@ -1,12 +1,11 @@
 package cn.zealon.readingcloud.account.feign.fallback;
 
 import cn.zealon.readingcloud.account.feign.client.LikeSeeClient;
-import cn.zealon.readingcloud.common.pojo.book.Book;
 import cn.zealon.readingcloud.common.result.Result;
 import cn.zealon.readingcloud.common.result.ResultUtil;
-import feign.hystrix.FallbackFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 
 /**

@@ -11,13 +11,17 @@ import cn.zealon.readingcloud.homepage.dao.IndexPageConfigMapper;
 import cn.zealon.readingcloud.homepage.service.IndexBannerService;
 import cn.zealon.readingcloud.homepage.service.IndexBooklistService;
 import cn.zealon.readingcloud.homepage.service.IndexPageConfigService;
+import cn.zealon.readingcloud.homepage.service.SearchService;
 import cn.zealon.readingcloud.homepage.vo.IndexPageVO;
 import com.github.pagehelper.PageHelper;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +47,9 @@ public class IndexPageConfigServiceImpl implements IndexPageConfigService {
     @Autowired
     private RedisService redisService;
 
+    @Autowired
+    private SearchService searchService;
+
     @Override
     public Result getIndexPageByType(Integer type, Integer page, Integer limit) {
         String key = RedisHomepageKey.getHomepageKey(type);
@@ -51,7 +58,9 @@ public class IndexPageConfigServiceImpl implements IndexPageConfigService {
         if (pageVOS != null) {
             return ResultUtil.success(pageVOS);
         }
-
+        if(searchService.Exists())
+            searchService.delete();
+        searchService.create();
         // 获得精品页配置
         List<IndexPageConfig> pageConfigs = this.getIndexPageWithPaging(type, page, limit);
         if (CommonUtil.isEmpty(pageConfigs)) {
@@ -114,4 +123,5 @@ public class IndexPageConfigServiceImpl implements IndexPageConfigService {
         List<IndexPageConfig> pageWithResult = this.indexPageConfigMapper.findPageWithResult(type);
         return pageWithResult;
     }
+
 }
