@@ -13,5 +13,5 @@ public class SearchBookResult {
     /** 图书列表 */
     private List<SearchBookItem> bookList;
     /** 返回总数 */
-    private Long total;
+    private int total;
 }

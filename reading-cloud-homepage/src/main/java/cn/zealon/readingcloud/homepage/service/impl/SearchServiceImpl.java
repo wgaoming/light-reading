@@ -8,6 +8,7 @@ import cn.zealon.readingcloud.homepage.domain.SearchBookItem;
 import cn.zealon.readingcloud.homepage.domain.SearchBookResult;
 import cn.zealon.readingcloud.homepage.service.SearchService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
@@ -94,12 +95,10 @@ public class SearchServiceImpl implements SearchService {
             // 查询成功，处理结果项
             SearchHits hits=response.getHits();
             for(SearchHit hit : hits) {
-                Map<String,Object> map=hit.getSourceAsMap();
-                int a=1;
-//                bookList.add(hit.source);
+                bookList.add(new Gson().fromJson(hit.getSourceAsString(),SearchBookItem.class));
             }
             // 赋值
-//            result.setTotal(searchResult.getTotal());
+            result.setTotal(bookList.size());
             result.setBookList(bookList);
         } catch (IOException e) {
             LOGGER.error("查询图书异常，查询语句:{}", query, e);
