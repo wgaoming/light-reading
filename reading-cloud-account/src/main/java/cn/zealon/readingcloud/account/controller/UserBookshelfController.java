@@ -32,6 +32,12 @@ public class UserBookshelfController {
         return this.bookshelfService.getUserBookshelf(userId);
     }
 
+    //"获取图书喜欢总数", httpMethod = "GET")
+    @GetMapping("/get-count")
+    public Result<Integer> getBookLikesCount(String bookId) {
+        return this.bookshelfService.getBookLikesCount(bookId);
+    }
+
 //"用户书架是否存在图书", httpMethod = "GET")
     @GetMapping("/exist-book")
     public Result<Integer> userBookshelfExistBook(@RequestHeader("userId") Integer userId, String bookId) {

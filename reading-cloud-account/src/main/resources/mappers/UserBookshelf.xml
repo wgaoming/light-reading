@@ -73,4 +73,10 @@
         order by last_read_time desc
     </select>
 
+    <select id="findPageWithCount" resultType="Integer">
+        select count(1)
+        from user_bookshelf
+        where book_id = #{bookId,jdbcType=VARCHAR}
+    </select>
+
 </mapper>

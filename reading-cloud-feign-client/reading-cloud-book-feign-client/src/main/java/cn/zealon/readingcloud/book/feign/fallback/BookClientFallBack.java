@@ -29,11 +29,6 @@ public class BookClientFallBack implements FallbackFactory<BookClient> {
                 LOGGER.error("获取图书[{}]失败：{}", bookId, cause.getMessage());
                 return ResultUtil.success(null);
             }
-
-            @Override
-            public int test() {
-                return 0;
-            }
         };
     }
 }

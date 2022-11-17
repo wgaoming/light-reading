@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(url = "http://localhost:8003/", name = "light-reading-cloud-account", fallbackFactory = LikeSeeClientFallBack.class)
 public interface LikeSeeClient {
 
-    @GetMapping("/account/like-see/get-count")
+    @GetMapping("/account/bookshelf/get-count")
     Result<Integer> getBookLikesCount(@RequestParam("bookId") String bookId);
 
 }

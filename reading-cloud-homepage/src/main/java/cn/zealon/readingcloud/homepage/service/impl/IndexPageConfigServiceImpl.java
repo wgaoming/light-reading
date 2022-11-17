@@ -1,5 +1,7 @@
 package cn.zealon.readingcloud.homepage.service.impl;
 
+import cn.zealon.readingcloud.account.feign.client.LikeSeeClient;
+import cn.zealon.readingcloud.book.feign.client.BookClient;
 import cn.zealon.readingcloud.common.cache.RedisExpire;
 import cn.zealon.readingcloud.common.cache.RedisHomepageKey;
 import cn.zealon.readingcloud.common.cache.RedisService;
@@ -12,6 +14,8 @@ import cn.zealon.readingcloud.homepage.service.IndexBannerService;
 import cn.zealon.readingcloud.homepage.service.IndexBooklistService;
 import cn.zealon.readingcloud.homepage.service.IndexPageConfigService;
 import cn.zealon.readingcloud.homepage.service.SearchService;
+import cn.zealon.readingcloud.homepage.vo.BooklistBookVO;
+import cn.zealon.readingcloud.homepage.vo.IndexBooklistVO;
 import cn.zealon.readingcloud.homepage.vo.IndexPageVO;
 import com.github.pagehelper.PageHelper;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -50,17 +54,41 @@ public class IndexPageConfigServiceImpl implements IndexPageConfigService {
     @Autowired
     private SearchService searchService;
 
+    @Autowired
+    private LikeSeeClient likeSeeClient;
+
     @Override
     public Result getIndexPageByType(Integer type, Integer page, Integer limit) {
+        //添加flag，判断书架是否有操作
+        Boolean flag=redisService.getHashVal("flag","change",Boolean.class);
+        if(flag==null)
+            redisService.setHashValExpire("flag","change",false,RedisExpire.DAY);
+
         String key = RedisHomepageKey.getHomepageKey(type);
         // 精品页VO列表
         List<IndexPageVO> pageVOS = this.redisService.getHashListVal(key, page.toString(), IndexPageVO.class);
         if (pageVOS != null) {
+            //書架有更新，更新展示喜歡人數的書目錄
+            if(flag) {
+                for (int i = 0; i < pageVOS.size(); i++) {
+                    IndexPageVO indexPageVO = pageVOS.get(i);
+                    if (indexPageVO.getItemType() == 1 && indexPageVO.getBooklist().getShowLikeCount()) {
+                        for (BooklistBookVO bookVO : indexPageVO.getBooklist().getBooks()) {
+                            bookVO.setLikeCount(likeSeeClient.getBookLikesCount(bookVO.getBookId()).getData());
+                        }
+                    }
+                }
+                redisService.setHashValExpire("flag","change",false,RedisExpire.DAY);
+            }
             return ResultUtil.success(pageVOS);
         }
-        if(searchService.Exists())
-            searchService.delete();
-        searchService.create();
+        try {
+            if (searchService.Exists())
+                searchService.delete();
+            searchService.create();
+        }catch(Exception e){
+            System.out.print("es初始化:"+e);
+        }
         // 获得精品页配置
         List<IndexPageConfig> pageConfigs = this.getIndexPageWithPaging(type, page, limit);
         if (CommonUtil.isEmpty(pageConfigs)) {

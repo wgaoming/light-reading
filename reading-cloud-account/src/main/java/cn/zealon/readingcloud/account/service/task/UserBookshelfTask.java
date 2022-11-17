@@ -1,9 +1,15 @@
 package cn.zealon.readingcloud.account.service.task;
 
 import cn.zealon.readingcloud.account.dao.UserBookshelfMapper;
+import cn.zealon.readingcloud.account.service.UserBookshelfService;
+import cn.zealon.readingcloud.account.service.impl.UserBookshelfServiceImpl;
+import cn.zealon.readingcloud.common.cache.RedisAccountKey;
+import cn.zealon.readingcloud.common.cache.RedisExpire;
+import cn.zealon.readingcloud.common.cache.RedisService;
 import cn.zealon.readingcloud.common.pojo.account.UserBookshelf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 书架同步任务
@@ -32,7 +38,7 @@ public class UserBookshelfTask implements Runnable {
                 this.bookshelfMapper.deleteByBookId(this.bookshelf.getBookId());
             }
         } catch (Exception ex){
-            LOGGER.error("书架同步失败，同步类型[{}]，异常:{}", this.syncType, ex);
+            LOGGER.error("书架同步失败，同步类型[{}]，异常:{}", this.syncType, ex.getMessage());
         }
     }
 

@@ -6,6 +6,9 @@ import cn.zealon.readingcloud.account.service.UserBookshelfService;
 import cn.zealon.readingcloud.account.service.task.UserBookshelfTask;
 import cn.zealon.readingcloud.account.vo.UserBookshelfVO;
 import cn.zealon.readingcloud.book.feign.client.BookClient;
+import cn.zealon.readingcloud.common.cache.RedisAccountKey;
+import cn.zealon.readingcloud.common.cache.RedisExpire;
+import cn.zealon.readingcloud.common.cache.RedisService;
 import cn.zealon.readingcloud.common.pojo.account.UserBookshelf;
 import cn.zealon.readingcloud.common.pojo.book.Book;
 import cn.zealon.readingcloud.common.result.Result;
@@ -15,11 +18,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 书架服务
@@ -42,18 +43,23 @@ public class UserBookshelfServiceImpl implements UserBookshelfService {
     @Autowired
     private BookClient bookClient;
 
+    @Autowired
+    private RedisService redisService;
+
+
+
     @Override
     public Result syncUserBookshelf(Integer userId, UserBookshelfBO bookshelfBO) {
         UserBookshelf bookshelf = new UserBookshelf();
         BeanUtils.copyProperties(bookshelfBO, bookshelf);
         bookshelf.setLastReadTime(System.currentTimeMillis());
-
+        redisService.setHashValExpire("flag","change",false,RedisExpire.DAY);
         // 异步处理同步任务
         UserBookshelfTask task = new UserBookshelfTask(bookshelfBO.getSyncType(), bookshelf, this.bookshelfMapper, userId);
 
         try {
             this.commonQueueThreadPool.execute(task);
-//            this.commonQueueThreadPool.awaitTermination(5, TimeUnit.SECONDS);
+            redisService.setHashValExpire("flag","change",true,RedisExpire.DAY);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -88,5 +94,11 @@ public class UserBookshelfServiceImpl implements UserBookshelfService {
             LOGGER.error("查询图书是否在用户书架里异常：{}", ex);
         }
         return ResultUtil.success(result);
+    }
+
+    @Override
+    public Result<Integer> getBookLikesCount(String bookId) {
+        Integer likeCount = this.bookshelfMapper.findPageWithCount(bookId);
+        return ResultUtil.success(likeCount);
     }
 }

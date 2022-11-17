@@ -33,6 +33,7 @@ public class BookController {
     public Result<BookVO> getBookDetails(String bookId){
         return bookService.getBookDetails(bookId);
     }
+
     @GetMapping("/test")
     public int test(){
         return 1;

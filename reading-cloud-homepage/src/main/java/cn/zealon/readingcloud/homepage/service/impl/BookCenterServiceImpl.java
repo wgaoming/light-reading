@@ -52,7 +52,11 @@ public class BookCenterServiceImpl implements BookCenterService {
         book = b.getData();
         if (book != null) {
             this.redisService.setExpireCache(key, book, RedisExpire.HOUR);
-            searchService.add(book,bookId);
+            try {
+                searchService.add(book, bookId);
+            }catch (Exception e){
+                System.out.println("存入ES失败："+e);
+            }
         }
         return book;
     }

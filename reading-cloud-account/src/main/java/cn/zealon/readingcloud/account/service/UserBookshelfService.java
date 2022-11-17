@@ -26,6 +26,16 @@ public interface UserBookshelfService {
     Result getUserBookshelf(Integer userId);
 
     /**
+     * 获取图书喜欢数量
+     * <p>
+     *     缓存20分钟
+     * </p>
+     * @param bookId
+     * @return
+     */
+    Result<Integer> getBookLikesCount(String bookId);
+
+    /**
      * 用户书架是否存在该图书
      * @param userId
      * @param bookId

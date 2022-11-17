@@ -18,8 +18,4 @@ public interface BookClient {
 
     @RequestMapping("/book/getBookById")
     Result<Book> getBookById(@RequestParam("bookId") String bookId);
-
-    @RequestMapping("/book/test")
-    int test();
-
 }

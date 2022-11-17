@@ -44,4 +44,5 @@ public interface UserService {
      * @return
      */
     Result updatePassword(UserBO userBO);
+
 }
