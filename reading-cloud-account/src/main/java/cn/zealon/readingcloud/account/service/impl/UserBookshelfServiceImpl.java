@@ -6,7 +6,6 @@ import cn.zealon.readingcloud.account.service.UserBookshelfService;
 import cn.zealon.readingcloud.account.service.task.UserBookshelfTask;
 import cn.zealon.readingcloud.account.vo.UserBookshelfVO;
 import cn.zealon.readingcloud.book.feign.client.BookClient;
-import cn.zealon.readingcloud.common.cache.RedisAccountKey;
 import cn.zealon.readingcloud.common.cache.RedisExpire;
 import cn.zealon.readingcloud.common.cache.RedisService;
 import cn.zealon.readingcloud.common.pojo.account.UserBookshelf;

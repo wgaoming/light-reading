@@ -31,6 +31,6 @@ public class UserBO {
     /**
      * 联系电话
      */
-//"手机", example = "13800138000")
+//"手机", example = "13800138000"
     private String phoneNumber;
 }

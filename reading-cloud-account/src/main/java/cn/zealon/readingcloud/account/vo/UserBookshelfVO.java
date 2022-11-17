@@ -2,8 +2,6 @@ package cn.zealon.readingcloud.account.vo;
 
 import lombok.Data;
 
-import java.util.Date;
-
 /**
  * 书架VO
  * @author: zealon

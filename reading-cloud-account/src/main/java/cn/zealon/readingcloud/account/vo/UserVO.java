@@ -1,7 +1,6 @@
 package cn.zealon.readingcloud.account.vo;
 
 import lombok.Data;
-
 import java.io.Serializable;
 
 /**

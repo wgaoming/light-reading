@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zealon.readingcloud.homepage.dao.HotSearchWordMapper">
+
+    <sql id="Base_Column_List">
+        id, frequency, name, create_time, update_time
+    </sql>
+    <insert id="insert">
+        insert into hot_search_word(frequency, name, create_time, update_time)
+        values (
+                1, #{name,jdbcType=VARCHAR},now(),now()
+            )
+    </insert>
+    <update id="update">
+        update hot_search_word
+        set
+            frequency = frequency+1,
+            update_time = now()
+        where name = #{name}
+    </update>
+
+</mapper>

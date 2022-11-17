@@ -34,7 +34,6 @@ public class UserUtil {
     }
 
     public static void main(String[] args){
-        //getSaltValue("1");
         String admin = getUserEncryptPassword("admin", "111");
         System.out.println(admin);
 

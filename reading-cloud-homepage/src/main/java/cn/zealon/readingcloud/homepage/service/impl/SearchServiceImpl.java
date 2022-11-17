@@ -32,7 +32,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 图书查询服务
@@ -74,7 +73,11 @@ public class SearchServiceImpl implements SearchService {
         builder.size(size);
         builder.query(QueryBuilders.fuzzyQuery("bookName",keyword));
         SearchBookResult searchBookResult = this.getSearchResult(builder);
-
+        if(hotSearchWordMapper.getHotSearchWord(keyword)==null){
+            hotSearchWordMapper.insert(keyword);
+        }else{
+            hotSearchWordMapper.update(keyword);
+        }
         return ResultUtil.success(searchBookResult);
     }
 

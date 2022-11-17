@@ -7,6 +7,7 @@ import cn.zealon.readingcloud.book.service.BookService;
 import cn.zealon.readingcloud.book.vo.BookChapterListVO;
 import cn.zealon.readingcloud.book.vo.BookChapterReadVO;
 import cn.zealon.readingcloud.book.vo.BookChapterVO;
+import cn.zealon.readingcloud.common.cache.RedisBookKey;
 import cn.zealon.readingcloud.common.cache.RedisExpire;
 import cn.zealon.readingcloud.common.cache.RedisService;
 import cn.zealon.readingcloud.common.pojo.book.Book;
@@ -51,7 +52,7 @@ public class BookChapterServiceImpl implements BookChapterService {
             return ResultUtil.notFound().buildMessage("该书不存在于本系统哦！");
         }
 
-        String key = "bookchapter-list-"+bookId;
+        String key = RedisBookKey.getBookChapterListKey(bookId);
         List<BookChapterListVO> chapterVOs = this.redisService.getCacheForList(key, BookChapter.class);
         if (null == chapterVOs || chapterVOs.size() == 0) {
             List<BookChapter> chapters = this.bookChapterMapper.findPageWithResult(book.getId());
@@ -71,7 +72,7 @@ public class BookChapterServiceImpl implements BookChapterService {
     @Override
     public Result<BookChapter> getChapterById(String bookId, Integer chapterId) {
         BookChapter chapter;
-        String key = "bookchapter-"+bookId;
+        String key = RedisBookKey.getBookChapterKey(bookId);
         String field = chapterId.toString();
         chapter = this.redisService.getHashVal(key, field, BookChapter.class);
         if (chapter == null) {
@@ -136,7 +137,7 @@ public class BookChapterServiceImpl implements BookChapterService {
      */
     private BookPreviousAndNextChapterNode getChapterNodeData(final Integer bookId, final String field){
         // 缓存获取
-        String key = "bookchapterNode-"+bookId;
+        String key = RedisBookKey.getBookChapterNodeKey(bookId);
         BookPreviousAndNextChapterNode chapterNode = this.redisService.getHashObject(key, field, BookPreviousAndNextChapterNode.class);
         if (chapterNode != null) {
             return chapterNode;

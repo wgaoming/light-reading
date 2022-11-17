@@ -2,7 +2,6 @@ package cn.zealon.readingcloud.account.common.config;
 
 import com.github.pagehelper.PageHelper;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import java.util.Properties;
 
@@ -14,31 +13,6 @@ import java.util.Properties;
 @Configuration
 @MapperScan(basePackages = "cn.zealon.readingcloud.account.dao")
 public class MybatisConfig {
-
-//    private final static String MAPPER_LOCATIONS = "classpath*:mappers/*.xml";
-//
-//    /** 工厂配置 */
-//    @Bean
-//    public SqlSessionFactory sqlSessionFactoryBean(@Qualifier("accountCenterDataSource") DataSource dataSource) throws Exception {
-//        // 设置数据源
-//        SqlSessionFactoryBean factory = new SqlSessionFactoryBean();
-//        factory.setDataSource(dataSource);
-//
-//        // 添加XML映射
-//        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-//        factory.setMapperLocations(resolver.getResources(MAPPER_LOCATIONS));
-//
-//        //添加插件
-//        factory.setPlugins(new Interceptor[]{ this.getPageHelper() });
-//        return factory.getObject();
-//    }
-//
-//    /** 会话模板 */
-//    @Bean(name = "accountCenterSqlSessionTemplate")
-//    public SqlSessionTemplate setSqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
-//        return new SqlSessionTemplate(sqlSessionFactory);
-//    }
-
     /** 分页插件 */
     private PageHelper getPageHelper(){
         //配置分页插件，详情请查阅官方文档
@@ -56,45 +30,4 @@ public class MybatisConfig {
         pageHelper.setProperties(properties);
         return pageHelper;
     }
-
-//    /**
-//     * swagger 配置类
-//     * http://localhost:8080/swagger-ui.html
-//     * @author zealon
-//     * @since 2019-07-04
-//     */
-//    @Configuration
-//    public static class AccountSwaggerConfig {
-//
-//        /**
-//         * swagger生成
-//         * @return Docket
-//         */
-//        @Bean
-//        public Docket customDocket() {
-//            Docket docket = new Docket(DocumentationType.SWAGGER_2)
-//                    .select()
-//                    .apis(RequestHandlerSelectors.basePackage("cn.zealon.readingcloud.account.controller"))
-//                    .paths(PathSelectors.any())
-//                    .build()
-//                    .apiInfo(apiInfo());
-//            return docket;
-//        }
-//
-//        /**
-//         * swagger基础信息
-//         * @return ApiInfo swagger信息
-//         */
-//        private ApiInfo apiInfo() {
-//            return new ApiInfoBuilder()
-//                    .title("账户中心接口")
-//                    .description("账户中心")
-//                    .termsOfServiceUrl("")
-//                    .contact(new Contact("", "", ""))
-//                    .license("")
-//                    .licenseUrl("")
-//                    .version("1.0.0")
-//                    .build();
-//        }
-//    }
 }

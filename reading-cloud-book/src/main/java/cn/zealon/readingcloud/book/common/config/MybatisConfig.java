@@ -13,30 +13,6 @@ import java.util.Properties;
 @Configuration
 @MapperScan(basePackages = "cn.zealon.readingcloud.book.dao")
 public class MybatisConfig {
-//
-//    private final static String MAPPER_LOCATIONS = "classpath*:mappers/*.xml";
-//
-//    /** 工厂配置 */
-//    @Bean
-//    public SqlSessionFactory sqlSessionFactoryBean(@Qualifier("bookCenterDataSource") DataSource dataSource) throws Exception {
-//        // 设置数据源
-//        SqlSessionFactoryBean factory = new SqlSessionFactoryBean();
-//        factory.setDataSource(dataSource);
-//
-//        // 添加XML映射
-//        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-//        factory.setMapperLocations(resolver.getResources(MAPPER_LOCATIONS));
-//
-//        //添加插件
-//        factory.setPlugins(new Interceptor[]{ this.getPageHelper() });
-//        return factory.getObject();
-//    }
-//
-//    /** 会话模板 */
-//    @Bean(name = "bookCenterSqlSessionTemplate")
-//    public SqlSessionTemplate setSqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
-//        return new SqlSessionTemplate(sqlSessionFactory);
-//    }
 
     /** 分页插件 */
     private PageHelper getPageHelper(){

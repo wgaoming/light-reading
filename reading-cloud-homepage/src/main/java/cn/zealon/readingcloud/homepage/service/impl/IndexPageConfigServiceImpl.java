@@ -1,7 +1,6 @@
 package cn.zealon.readingcloud.homepage.service.impl;
 
 import cn.zealon.readingcloud.account.feign.client.LikeSeeClient;
-import cn.zealon.readingcloud.book.feign.client.BookClient;
 import cn.zealon.readingcloud.common.cache.RedisExpire;
 import cn.zealon.readingcloud.common.cache.RedisHomepageKey;
 import cn.zealon.readingcloud.common.cache.RedisService;
@@ -15,17 +14,13 @@ import cn.zealon.readingcloud.homepage.service.IndexBooklistService;
 import cn.zealon.readingcloud.homepage.service.IndexPageConfigService;
 import cn.zealon.readingcloud.homepage.service.SearchService;
 import cn.zealon.readingcloud.homepage.vo.BooklistBookVO;
-import cn.zealon.readingcloud.homepage.vo.IndexBooklistVO;
 import cn.zealon.readingcloud.homepage.vo.IndexPageVO;
 import com.github.pagehelper.PageHelper;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

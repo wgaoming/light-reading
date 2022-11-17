@@ -21,4 +21,11 @@ public interface HotSearchWordMapper {
      */
     @Select("SELECT name FROM hot_search_word order by frequency desc limit #{size}")
     List<String> getHotSearchWordList(@Param("size") int size);
+
+    @Select("SELECT name FROM hot_search_word where name=#{name}")
+    String getHotSearchWord(@Param("name") String name);
+
+    int insert(@Param("name") String name);
+
+    int update(@Param("name") String name);
 }
